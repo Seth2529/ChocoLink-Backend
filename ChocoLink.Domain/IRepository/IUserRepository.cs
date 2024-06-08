@@ -1,0 +1,19 @@
+﻿using ChocoLink.Domain.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ChocoLink.Domain.Interfaces
+{
+    public interface IUserRepository
+    {
+        public User GetUserById(int userId);
+        public User GetUserByEmail(string email);
+        public void AddUser(User user);
+        void UpdateUser(User user);
+        public int NextAvailableID();
+
+    }
+}
