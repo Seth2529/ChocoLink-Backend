@@ -61,9 +61,13 @@ namespace ChocoLink.Application.Services
             _groupRepository.AddParticipant(groupUser);
         }
 
-        public int GetParticipantCount(int groupId)
+        public (int currentParticipants, int maxParticipants) GetParticipantCount(int groupId)
         {
-            return _groupRepository.GetParticipantCount(groupId);
+            var group = _groupRepository.GetGroupById(groupId);
+            var currentParticipants = _groupRepository.GetParticipantCount(groupId);
+            var maxParticipants = group.MaxParticipants;
+
+            return (currentParticipants, maxParticipants);
         }
     }
 }

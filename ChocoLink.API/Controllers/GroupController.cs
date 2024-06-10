@@ -94,17 +94,14 @@ namespace ChocoLink.API.Controllers
             }
             catch (Exception ex)
             {
-                // Log the main exception
                 Console.WriteLine($"Error: {ex.Message}");
 
-                // Check and log the inner exception if it exists
                 if (ex.InnerException != null)
                 {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                    Console.WriteLine($"Exceção Interna: {ex.InnerException.Message}");
                 }
 
-                // Return a generic error message to the client
-                return BadRequest("An error occurred while adding the participant.");
+                return BadRequest("Ocorreu um erro ao adicionar participante.");
             }
         }
 
@@ -113,8 +110,9 @@ namespace ChocoLink.API.Controllers
         {
             try
             {
-                var count = _groupService.GetParticipantCount(groupId);
-                return Ok(count);
+                var (currentParticipants, maxParticipants) = _groupService.GetParticipantCount(groupId);
+                var result = $"{currentParticipants}/{maxParticipants}";
+                return Ok(result);
             }
             catch (Exception erro)
             {
