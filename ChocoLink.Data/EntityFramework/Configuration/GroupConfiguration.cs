@@ -13,7 +13,7 @@ namespace ChocoLink.Data.EntityFramework.Configuration
     {
         public void Configure(EntityTypeBuilder<Group> builder)
         {
-            builder.ToTable("Group");
+            builder.ToTable("Groups");
             builder.HasKey(g => g.GroupID);
 
             builder
@@ -27,8 +27,8 @@ namespace ChocoLink.Data.EntityFramework.Configuration
                 .HasColumnType("varchar(100)")
                 .IsRequired();
             builder
-                .Property(g => g.NumberParticipants)
-                .HasColumnName("NumberParticipants")
+                .Property(g => g.MaxParticipants)
+                .HasColumnName("MaxParticipants")
                 .HasColumnType("int");
 
             builder
@@ -53,6 +53,10 @@ namespace ChocoLink.Data.EntityFramework.Configuration
                 .Property(g => g.Photo)
                 .HasColumnName("Photo")
                 .HasColumnType("VARBINARY(MAX)");
+
+            builder.HasMany(g => g.GroupUsers)
+               .WithOne(gu => gu.Group)
+               .HasForeignKey(gu => gu.GroupID);
 
         }
     }

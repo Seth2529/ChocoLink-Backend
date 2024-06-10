@@ -4,24 +4,21 @@ using ChocoLink.Domain.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace ChocoLink.Application.Services
 {
     public class GroupService : IGroupService
     {
+        private readonly IGroupRepository _groupRepository;
 
-        IGroupRepository _groupRepository;
         public GroupService(IGroupRepository repository)
         {
             _groupRepository = repository;
         }
 
-        public Group GetGroupName(string Groupname)
+        public Group GetGroupName(string groupName)
         {
-            return _groupRepository.GetGroupName(Groupname);
+            return _groupRepository.GetGroupName(groupName);
         }
 
         public IEnumerable<Group> GetAllGroups()
@@ -33,7 +30,7 @@ namespace ChocoLink.Application.Services
         {
             if (GroupExist(group.GroupName))
             {
-                throw new Exception("Nome do grupo já cadastrado");
+                throw new Exception("Nome do grupo já cadastrado.");
             }
 
             var id = _groupRepository.NextAvailableID();
@@ -41,20 +38,32 @@ namespace ChocoLink.Application.Services
             _groupRepository.AddGroup(group);
         }
 
-        public Group GetGroupById(int GroupID)
+        public Group GetGroupById(int groupID)
         {
-            return _groupRepository.GetGroupById(GroupID);
+            return _groupRepository.GetGroupById(groupID);
         }
 
         public bool GroupExist(string groupName)
         {
-            var pessoa = _groupRepository.GetGroupName(groupName);
-            return pessoa != null;
+            var group = _groupRepository.GetGroupName(groupName);
+            return group != null;
         }
 
         public void UpdateGroup(Group group)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddParticipant(GroupUser groupUser)
+        {
+            int nextGroupUserId = _groupRepository.NextAvailableGroupUserID();
+            groupUser.GroupUserID = nextGroupUserId;
+            _groupRepository.AddParticipant(groupUser);
+        }
+
+        public int GetParticipantCount(int groupId)
+        {
+            return _groupRepository.GetParticipantCount(groupId);
         }
     }
 }

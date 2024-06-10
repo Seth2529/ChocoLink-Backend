@@ -15,5 +15,8 @@ namespace ChocoLink.Domain.IService
         public Group GetGroupName(string groupName);
         public bool GroupExist(string groupName);
         void UpdateGroup(Group group);
+        public void AddParticipant(GroupUser groupUser);
+        public int GetParticipantCount(int groupId);
+
     }
 }

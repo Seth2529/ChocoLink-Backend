@@ -5,36 +5,37 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChocoLink.Data.Repository
 {
     public class GroupRepository : IGroupRepository
     {
-        Context Context { get; set; }
-        public GroupRepository(Context context) { Context = context; }
+        private readonly Context _context;
 
+        public GroupRepository(Context context)
+        {
+            _context = context;
+        }
 
         public IEnumerable<Group> GetAllGroups()
         {
-            return Context.Group.ToList();
+            return _context.Groups.ToList();
         }
 
         public void AddGroup(Group group)
         {
-            Context.Group.Add(group);
-            Context.SaveChanges();
+            _context.Groups.Add(group);
+            _context.SaveChanges();
         }
 
         public Group GetGroupById(int groupID)
         {
-            return Context.Group.First(g => g.GroupID == groupID);
+            return _context.Groups.First(g => g.GroupID == groupID);
         }
 
         public int NextAvailableID()
         {
-            var ExistId = Context.Group.Select(g => g.GroupID).ToList();
+            var ExistId = _context.Groups.Select(g => g.GroupID).ToList();
             int NextID = 1;
 
             while (ExistId.Contains(NextID))
@@ -44,14 +45,37 @@ namespace ChocoLink.Data.Repository
 
             return NextID;
         }
+        public int NextAvailableGroupUserID()
+        { 
+        var ExistId = _context.GroupUsers.Select(g => g.GroupUserID).ToList();
+        int NextID = 1;
 
-        public Group GetGroupName(string Groupname)
-        {
-            return Context.Group.FirstOrDefault(p => p.GroupName == Groupname);
+            while (ExistId.Contains(NextID))
+            {
+                NextID++;
+            }
+
+            return NextID;
         }
+        public Group GetGroupName(string groupname)
+        {
+            return _context.Groups.FirstOrDefault(p => p.GroupName == groupname);
+        }
+
         public void UpdateGroup(Group group)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddParticipant(GroupUser groupUser)
+        {
+            _context.GroupUsers.Add(groupUser);
+            _context.SaveChanges();
+        }
+
+        public int GetParticipantCount(int groupId)
+        {
+            return _context.GroupUsers.Count(gu => gu.GroupID == groupId);
         }
     }
 }

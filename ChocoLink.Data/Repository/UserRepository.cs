@@ -16,18 +16,18 @@ namespace ChocoLink.Data.Repository
 
         public void AddUser(User user)
         {
-            Context.User.Add(user);
+            Context.Users.Add(user);
             Context.SaveChanges();
         }
 
         public User GetUserById(int userId)
         {
-            return Context.User.First(m => m.UserId == userId);
+            return Context.Users.First(m => m.UserId == userId);
         }
 
         public int NextAvailableID()
         {
-            var ExistId = Context.User.Select(p => p.UserId).ToList();
+            var ExistId = Context.Users.Select(p => p.UserId).ToList();
             int NextID = 1;
 
             while (ExistId.Contains(NextID))
@@ -39,7 +39,7 @@ namespace ChocoLink.Data.Repository
         }
         public User GetUserByEmail(string email)
         {
-            return Context.User.FirstOrDefault(p => p.Email == email);
+            return Context.Users.FirstOrDefault(p => p.Email == email);
         }
 
         public void UpdateUser(User user)

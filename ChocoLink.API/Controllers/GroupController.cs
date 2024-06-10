@@ -1,19 +1,26 @@
 ﻿using ChocoLink.API.ViewModels;
-using ChocoLink.Data.EntityFramework;
 using ChocoLink.Domain.Entity;
 using ChocoLink.Domain.IService;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChocoLink.API.Controllers
 {
-    public class GroupController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
-        private readonly Context db = new Context();
-        public GroupController(IGroupService userService)
+
+        public GroupController(IGroupService groupService)
         {
-            _groupService = userService;
+            _groupService = groupService;
         }
+
         [HttpPost("AddGroup")]
         public async Task<IActionResult> AddGroup([FromForm] NewGroupViewModel group)
         {
@@ -28,14 +35,14 @@ namespace ChocoLink.API.Controllers
                         photoBytes = memoryStream.ToArray();
                     }
 
-                    Group add = new()
+                    var add = new Group
                     {
                         Photo = photoBytes,
                         GroupName = group.GroupName,
-                        NumberParticipants = group.NumberParticipants,
+                        MaxParticipants = group.MaxParticipants,
                         Value = group.Value,
                         DateDiscover = group.DateDiscover,
-                        Description = group.Description,
+                        Description = group.Description
                     };
 
                     _groupService.AddGroup(add);
@@ -54,8 +61,60 @@ namespace ChocoLink.API.Controllers
         {
             try
             {
-                IEnumerable<Group> group = _groupService.GetAllGroups();
-                return Ok(group);
+                var groups = _groupService.GetAllGroups();
+                return Ok(groups);
+            }
+            catch (Exception erro)
+            {
+                return BadRequest(erro.Message);
+            }
+        }
+
+        [HttpPost("AddParticipant")]
+        public IActionResult AddParticipant(NewGroupUserViewModel newGroupUser)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var add = new GroupUser
+                    {
+                        GroupID = newGroupUser.GroupID,
+                        UserID = newGroupUser.UserID
+                    };
+
+                    _groupService.AddParticipant(add);
+                    return Ok("Participante adicionado com sucesso.");
+                }
+
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                return BadRequest(errors);
+            }
+            catch (Exception ex)
+            {
+                // Log the main exception
+                Console.WriteLine($"Error: {ex.Message}");
+
+                // Check and log the inner exception if it exists
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+
+                // Return a generic error message to the client
+                return BadRequest("An error occurred while adding the participant.");
+            }
+        }
+
+        [HttpGet("GetParticipantCount/{groupId}")]
+        public IActionResult GetParticipantCount(int groupId)
+        {
+            try
+            {
+                var count = _groupService.GetParticipantCount(groupId);
+                return Ok(count);
             }
             catch (Exception erro)
             {

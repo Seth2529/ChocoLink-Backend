@@ -12,8 +12,12 @@ namespace ChocoLink.Domain.IRepository
         public Group GetGroupById(int GroupID);
         public IEnumerable<Group> GetAllGroups();
         public int NextAvailableID();
+        public int NextAvailableGroupUserID();
         public void AddGroup(Group group);
         public Group GetGroupName(string Groupname);
         void UpdateGroup(Group group);
+        public void AddParticipant(GroupUser groupUser);
+        public int GetParticipantCount(int groupId);
+
     }
 }

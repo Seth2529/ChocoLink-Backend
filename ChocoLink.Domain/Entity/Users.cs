@@ -16,10 +16,12 @@ namespace ChocoLink.Domain.Entity
         public string Password { get; set; }
         public byte[] Photo { get; set; }
 
-        public bool PasswordValidate(string senha)
+
+        public ICollection<GroupUser> GroupUsers { get; set; } = new List<GroupUser>();
+
+        public bool PasswordValidate(string password)
         {
-            // Verificação simples de senha
-            return Password == senha;
+            return Password == password;
         }
     }
 }

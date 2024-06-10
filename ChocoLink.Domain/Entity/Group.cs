@@ -12,9 +12,12 @@ namespace ChocoLink.Domain.Entity
         public int GroupID { get; set; }
         public byte[] Photo { get; set; }  // Armazena a imagem como array de bytes
         public string GroupName { get; set; }
-        public int NumberParticipants { get; set; }
+        public int MaxParticipants { get; set; }
         public decimal Value { get; set; }
         public DateTime? DateDiscover { get; set; }
         public string Description { get; set; }
+
+
+        public ICollection<GroupUser> GroupUsers { get; set; } = new List<GroupUser>();
     }
 }
