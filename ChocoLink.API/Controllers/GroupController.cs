@@ -71,7 +71,7 @@ namespace ChocoLink.API.Controllers
         }
 
         [HttpPost("AddParticipant")]
-        public IActionResult AddParticipant(NewGroupUserViewModel newGroupUser)
+        public IActionResult AddParticipant([FromForm] NewGroupUserViewModel newGroupUser)
         {
             try
             {
