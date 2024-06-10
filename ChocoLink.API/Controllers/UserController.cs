@@ -50,8 +50,8 @@ namespace ChocoLink.API.Controllers
             }
         }
 
-        [HttpGet("Authenticate")]
-        public IActionResult Authenticate(AuthenticateViewModel authenticate)
+        [HttpPost("Authenticate")]
+        public IActionResult Authenticate([FromBody] AuthenticateViewModel authenticate)
         {
             try
             {
@@ -60,12 +60,10 @@ namespace ChocoLink.API.Controllers
                     User user = _userService.GetUserByEmail(authenticate.Email);
                     if (user != null && user.PasswordValidate(authenticate.Password))
                     {
-                        // Autenticação bem-sucedida
                         return Ok(new { success = true, message = "" });
                     }
                     else
                     {
-                        // E-mail ou senha inválidos
                         return Unauthorized(new { success = false, message = "E-mail ou senha inválidos" });
                     }
                 }
