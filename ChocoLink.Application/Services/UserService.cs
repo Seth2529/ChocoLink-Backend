@@ -42,7 +42,7 @@ namespace ChocoLink.Application.Services
 
         public void UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            _userRepository.UpdateUser(user);
         }
 
         public bool UserExist(string email)

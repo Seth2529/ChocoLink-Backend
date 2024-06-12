@@ -88,10 +88,10 @@ namespace ChocoLink.API.Controllers
                     return BadRequest("Token inválido ou expirado.");
                 }
 
-                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "usuario");
+                var emailClaim = token.Claims.FirstOrDefault(c => c.Type == "user");
                 if (emailClaim == null)
                 {
-                    Console.WriteLine("Token inválido. Claim 'usuario' não encontrada.");
+                    Console.WriteLine("Token inválido. Claim 'user' não encontrada.");
                     return BadRequest("Token inválido.");
                 }
 
@@ -102,7 +102,7 @@ namespace ChocoLink.API.Controllers
                 {
                     return BadRequest("Usuário não encontrado.");
                 }
-
+                //{"message": "Erro no servidor: The method or operation is not implemented."}
                 // Atualiza a senha do usuário
                 user.Password = model.NewPassword;  // Supondo que a senha esteja sendo atribuída diretamente
                 _userService.UpdateUser(user);

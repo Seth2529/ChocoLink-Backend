@@ -44,7 +44,12 @@ namespace ChocoLink.Data.Repository
 
         public void UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            // Atualize a lógica conforme necessário
+            var existingUser = Context.Users.FirstOrDefault(u => u.Email == user.Email);
+            if (existingUser != null)
+            {
+                existingUser.Password = user.Password;
+            }
         }
 
     }
