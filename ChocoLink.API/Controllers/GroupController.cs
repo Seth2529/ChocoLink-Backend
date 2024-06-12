@@ -77,6 +77,12 @@ namespace ChocoLink.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var (currentParticipants, maxParticipants) = _groupService.GetParticipantCount(newGroupUser.GroupID);
+
+                    if (currentParticipants >= maxParticipants)
+                    {
+                        return BadRequest($"O grupo atingiu o número máximo de participantes ({maxParticipants}).");
+                    }
                     var add = new GroupUser
                     {
                         GroupID = newGroupUser.GroupID,

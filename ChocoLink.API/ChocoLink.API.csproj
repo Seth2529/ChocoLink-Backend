@@ -14,6 +14,7 @@
     <ProjectReference Include="..\ChocoLink.Application\ChocoLink.Application.csproj" />
     <ProjectReference Include="..\ChocoLink.Data\ChocoLink.Data.csproj" />
     <ProjectReference Include="..\ChocoLink.Domain\ChocoLink.Domain.csproj" />
+    <ProjectReference Include="..\ChocoLink.Infra\ChocoLink.Infra.csproj" />
   </ItemGroup>
 
 </Project>

@@ -50,32 +50,5 @@ namespace ChocoLink.API.Controllers
             }
         }
 
-        [HttpPost("Authenticate")]
-        public IActionResult Authenticate([FromForm] AuthenticateViewModel authenticate)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    User user = _userService.GetUserByEmail(authenticate.Email);
-                    if (user != null && user.PasswordValidate(authenticate.Password))
-                    {
-                        return Ok(new { success = true, message = "" });
-                    }
-                    else
-                    {
-                        return Unauthorized(new { success = false, message = "E-mail ou senha inválidos" });
-                    }
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
-            }
-        }
     }
 }
