@@ -12,7 +12,8 @@ namespace ChocoLink.Domain.Interfaces
         public User GetUserById(int userId);
         public User GetUserByEmail(string email);
         public void AddUser(User user);
-        void UpdateUser(User user);
+        //void UpdateUser(User user);
+        void UpdateUserPassword(User user, string newPassword);
         public int NextAvailableID();
 
     }

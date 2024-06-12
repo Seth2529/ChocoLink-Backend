@@ -13,7 +13,8 @@ namespace ChocoLink.Domain.IService
         public User GetUserById(int UserId);
         public User GetUserByEmail(string email);
         public void AddUser(User user);
-        void UpdateUser(User user);
+        //void UpdateUser(User user);
+        void UpdateUserPassword(User user, string newPassword);
         public bool UserExist(string email);
     }
 }

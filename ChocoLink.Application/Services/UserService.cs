@@ -40,9 +40,13 @@ namespace ChocoLink.Application.Services
             _userRepository.AddUser(user);
         }
 
-        public void UpdateUser(User user)
+        //public void UpdateUser(User user)
+        //{
+        //    _userRepository.UpdateUser(user);
+        //}
+        public void UpdateUserPassword(User user, string newpassword)
         {
-            _userRepository.UpdateUser(user);
+            _userRepository.UpdateUserPassword(user,newpassword);
         }
 
         public bool UserExist(string email)

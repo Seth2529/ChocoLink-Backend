@@ -1,6 +1,7 @@
 ﻿using ChocoLink.Data.EntityFramework;
 using ChocoLink.Domain.Entity;
 using ChocoLink.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,13 +43,21 @@ namespace ChocoLink.Data.Repository
             return Context.Users.FirstOrDefault(p => p.Email == email);
         }
 
-        public void UpdateUser(User user)
+        //public void UpdateUser(User user)
+        //{
+        //    var existingUser = Context.Users.FirstOrDefault(u => u.Email == user.Email);
+        //    if (existingUser != null)
+        //    {
+        //        existingUser.Password = user.Password;
+        //    }
+        //}
+
+        public void UpdateUserPassword(User user, string newPassword)
         {
-            // Atualize a lógica conforme necessário
             var existingUser = Context.Users.FirstOrDefault(u => u.Email == user.Email);
             if (existingUser != null)
             {
-                existingUser.Password = user.Password;
+                existingUser.Password = newPassword;
             }
         }
 

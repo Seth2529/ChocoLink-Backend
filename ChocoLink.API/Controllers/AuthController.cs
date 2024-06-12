@@ -102,10 +102,8 @@ namespace ChocoLink.API.Controllers
                 {
                     return BadRequest("Usuário não encontrado.");
                 }
-                //{"message": "Erro no servidor: The method or operation is not implemented."}
-                // Atualiza a senha do usuário
-                user.Password = model.NewPassword;  // Supondo que a senha esteja sendo atribuída diretamente
-                _userService.UpdateUser(user);
+                user.Password = model.NewPassword;
+                _userService.UpdateUserPassword(user, model.NewPassword);
 
                 return Ok("Senha redefinida com sucesso.");
             }
