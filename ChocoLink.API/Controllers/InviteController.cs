@@ -1,4 +1,5 @@
-﻿using ChocoLink.Domain.IService;
+﻿using ChocoLink.API.ViewModels;
+using ChocoLink.Domain.IService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -9,10 +10,12 @@ namespace ChocoLink.API.Controllers
     public class InviteController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IGroupService _groupService;
 
-        public InviteController(IUserService userService)
+        public InviteController(IUserService userService, IGroupService groupService)
         {
             _userService = userService;
+            _groupService = groupService;   
         }
 
         [HttpPost("InviteUser")]
@@ -22,8 +25,8 @@ namespace ChocoLink.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _userService.InviteUserToGroup(model.GroupId, model.Email);
-                    return Ok($"Convite enviado para {model.Email} com sucesso.");
+                    _userService.InviteUserToGroup(model.GroupId, model.UserId);
+                    return Ok($"Convite enviado para o usuário com ID {model.UserId} com sucesso.");
                 }
                 return BadRequest("Dados inválidos.");
             }
@@ -40,6 +43,23 @@ namespace ChocoLink.API.Controllers
             {
                 _userService.AcceptInvitation(invitationId);
                 return Ok("Convite aceito com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
+            }
+        }
+        [HttpGet("GetInvitation/{invitationId}")]
+        public IActionResult GetInvitationById(int invitationId)
+        {
+            try
+            {
+                var invitation = _groupService.GetInvitationById(invitationId);
+                if (invitation == null)
+                {
+                    return NotFound("Convite não encontrado.");
+                }
+                return Ok(invitation);
             }
             catch (Exception ex)
             {

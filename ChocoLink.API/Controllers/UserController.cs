@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChocoLink.API.Controllers
 {
-    [Route("User")]
     [ApiController]
+    [Route("[controller]")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

@@ -19,6 +19,6 @@ namespace ChocoLink.Domain.Entity
 
 
         public ICollection<GroupUser> GroupUsers { get; set; } = new List<GroupUser>();
-        public ICollection<Invite> Invitations { get; set; } = new List<Invite>();
+        public ICollection<Invite> Invites { get; set; } = new List<Invite>();
     }
 }

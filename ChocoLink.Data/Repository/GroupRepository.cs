@@ -10,32 +10,32 @@ namespace ChocoLink.Data.Repository
 {
     public class GroupRepository : IGroupRepository
     {
-        private readonly Context _context;
+        private readonly Context Context;
 
         public GroupRepository(Context context)
         {
-            _context = context;
+            Context = context;
         }
 
         public IEnumerable<Group> GetAllGroups()
         {
-            return _context.Groups.ToList();
+            return Context.Groups.ToList();
         }
 
         public void AddGroup(Group group)
         {
-            _context.Groups.Add(group);
-            _context.SaveChanges();
+            Context.Groups.Add(group);
+            Context.SaveChanges();
         }
 
         public Group GetGroupById(int groupID)
         {
-            return _context.Groups.First(g => g.GroupID == groupID);
+            return Context.Groups.First(g => g.GroupID == groupID);
         }
 
         public int NextAvailableID()
         {
-            var ExistId = _context.Groups.Select(g => g.GroupID).ToList();
+            var ExistId = Context.Groups.Select(g => g.GroupID).ToList();
             int NextID = 1;
 
             while (ExistId.Contains(NextID))
@@ -47,7 +47,7 @@ namespace ChocoLink.Data.Repository
         }
         public int NextAvailableGroupUserID()
         { 
-        var ExistId = _context.GroupUsers.Select(g => g.GroupUserID).ToList();
+        var ExistId = Context.GroupUsers.Select(g => g.GroupUserID).ToList();
         int NextID = 1;
 
             while (ExistId.Contains(NextID))
@@ -59,7 +59,7 @@ namespace ChocoLink.Data.Repository
         }
         public Group GetGroupName(string groupname)
         {
-            return _context.Groups.FirstOrDefault(p => p.GroupName == groupname);
+            return Context.Groups.FirstOrDefault(p => p.GroupName == groupname);
         }
 
         public void UpdateGroup(Group group)
@@ -69,28 +69,31 @@ namespace ChocoLink.Data.Repository
 
         public void AddParticipant(GroupUser groupUser)
         {
-            _context.GroupUsers.Add(groupUser);
-            _context.SaveChanges();
+            Context.GroupUsers.Add(groupUser);
+            Context.SaveChanges();
         }
 
         public int GetParticipantCount(int groupId)
         {
-            return _context.GroupUsers.Count(gu => gu.GroupID == groupId);
+            return Context.GroupUsers.Count(gu => gu.GroupID == groupId);
         }
         public void AddInvitation(Invite invite)
         {
-            _context.Invites.Add(invite);
-            _context.SaveChanges();
+            Context.Invites.Add(invite);
+            Context.SaveChanges();
         }
-
+        public Invite GetInvitationById(int invitationId)
+        {
+            return Context.Invites.FirstOrDefault(i => i.InviteId == invitationId);
+        }
         public void UpdateInvitation(Invite invite)
         {
-            var existingInvite = _context.Invites.FirstOrDefault(i => i.InviteId == invite.InviteId);
+            var existingInvite = Context.Invites.FirstOrDefault(i => i.InviteId == invite.InviteId);
             if (existingInvite != null)
             {
                 existingInvite.Status = invite.Status;
                 existingInvite.ResponseDate = invite.ResponseDate;
-                _context.SaveChanges();
+                Context.SaveChanges();
             }
         }
     }

@@ -65,6 +65,25 @@ namespace ChocoLink.Application.Services
         {
             return _userRepository.GetUserByEmail(email);
         }
+
+        public void InviteUserToGroup(int groupId, int userId)
+        {
+            var user = _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                throw new Exception("Usuário não existe");
+            }
+
+            var invitation = new Invite
+            {
+                GroupId = groupId,
+                UserId = userId,
+                Status = "Pendente",
+                InvitationDate = DateTime.UtcNow
+            };
+
+            _groupRepository.AddInvitation(invitation);
+        }
         public void InviteOrRegisterUser(int groupId, string email)
         {
             var user = _userRepository.GetUserByEmail(email);
@@ -74,7 +93,7 @@ namespace ChocoLink.Application.Services
             }
             else
             {
-                InviteUserToGroup(groupId, user.Email);
+                InviteUserToGroup(groupId, user.UserId);
             }
         }
 
@@ -90,7 +109,7 @@ namespace ChocoLink.Application.Services
 
             _groupRepository.AddInvitation(invitation);
             string subject = "Convite para o Aplicativo e Grupo";
-            string body = $"Você foi convidado para se juntar ao grupo com ID: {groupId}. Por favor, registre-se no nosso aplicativo.";
+            string body = $"Você foi convidado para se juntar a um grupo. Por favor, registre-se no nosso aplicativo.";
             Email.Enviar(subject, body, email, _emailConfig);
         }
 

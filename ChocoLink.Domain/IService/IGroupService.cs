@@ -17,6 +17,7 @@ namespace ChocoLink.Domain.IService
         void UpdateGroup(Group group);
         public void AddParticipant(GroupUser groupUser);
         public (int currentParticipants, int maxParticipants) GetParticipantCount(int groupId);
+        public Invite GetInvitationById(int invitationId);
 
     }
 }

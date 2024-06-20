@@ -19,6 +19,7 @@ namespace ChocoLink.Domain.IRepository
         public void AddParticipant(GroupUser groupUser);
         public int GetParticipantCount(int groupId);
         public void AddInvitation(Invite invite);
+        public Invite GetInvitationById(int invitationId);
         public void UpdateInvitation(Invite invite);
 
     }

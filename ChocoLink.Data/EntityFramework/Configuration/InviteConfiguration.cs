@@ -48,8 +48,12 @@ namespace ChocoLink.Data.EntityFramework.Configuration
                 .IsRequired(false);
 
             builder.HasOne(i => i.Group)
-                .WithMany(g => g.Invite)
+                .WithMany(g => g.Invites)
                 .HasForeignKey(i => i.GroupId);
+
+            builder.HasOne(i => i.User)
+                .WithMany(u => u.Invites)
+                .HasForeignKey(i => i.UserId);
         }
     }
 }

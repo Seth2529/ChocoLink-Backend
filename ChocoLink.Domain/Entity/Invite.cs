@@ -10,11 +10,14 @@ namespace ChocoLink.Domain.Entity
     {
         public int InviteId { get; set; }
         public int GroupId { get; set; }
+        public int UserId { get; set; }
         public string Email { get; set; }
         public string Status { get; set; }
         public DateTime InvitationDate { get; set; }
         public DateTime? ResponseDate { get; set; }
 
         public Group Group { get; set; }
+        public User User { get; set; }
+
     }
 }
