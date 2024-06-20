@@ -26,6 +26,11 @@ namespace ChocoLink.Data.EntityFramework.Configuration
                 .HasColumnType("int")
                 .IsRequired();
 
+            builder.Property(gu => gu.PerfilID)
+                .HasColumnName("PerfilID")
+                .HasColumnType("int")
+                .IsRequired();
+
             builder.HasOne(gu => gu.Group)
                 .WithMany(g => g.GroupUsers)
                 .HasForeignKey(gu => gu.GroupID);

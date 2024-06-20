@@ -46,7 +46,16 @@ namespace ChocoLink.API.Controllers
                     };
 
                     _groupService.AddGroup(add);
-                    return Ok("Adicionado com Sucesso");
+
+                    var newGroupUser = new GroupUser
+                    {
+                        GroupID = add.GroupID,
+                        UserID = group.UserID,
+                        PerfilID = 1
+                    };
+                    _groupService.AddParticipant(newGroupUser);
+
+                    return Ok("Grupo e administrador adicionados com sucesso.");
                 }
                 return BadRequest("Dados inválidos.");
             }

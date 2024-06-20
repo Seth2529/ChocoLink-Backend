@@ -7,16 +7,22 @@ using ChocoLink.Domain.Entity;
 using ChocoLink.Domain.Interfaces;
 using ChocoLink.Domain.IRepository;
 using ChocoLink.Domain.IService;
+using ChocoLink.Infra.EmailService;
 
 namespace ChocoLink.Application.Services
 {
     public class UserService : IUserService
     {
 
-        IUserRepository _userRepository;
-        public UserService(IUserRepository repository)
+        private readonly IUserRepository _userRepository;
+        private readonly IGroupRepository _groupRepository;
+        private readonly EmailConfig _emailConfig;
+
+        public UserService(IUserRepository userRepository, IGroupRepository groupRepository, EmailConfig emailConfig)
         {
-            _userRepository = repository;
+            _userRepository = userRepository;
+            _groupRepository = groupRepository;
+            _emailConfig = emailConfig;
         }
         public Task<User> Authenticate(string login, string password)
         {
@@ -58,6 +64,61 @@ namespace ChocoLink.Application.Services
         public User GetUserByEmail(string email)
         {
             return _userRepository.GetUserByEmail(email);
+        }
+        public void InviteOrRegisterUser(int groupId, string email)
+        {
+            var user = _userRepository.GetUserByEmail(email);
+            if (user == null)
+            {
+                SendEmailInvite(email, groupId);
+            }
+            else
+            {
+                InviteUserToGroup(groupId, user.Email);
+            }
+        }
+
+        private void SendEmailInvite(string email, int groupId)
+        {
+            var invitation = new Invite
+            {
+                GroupId = groupId,
+                Email = email,
+                Status = "Pendente",
+                InvitationDate = DateTime.UtcNow
+            };
+
+            _groupRepository.AddInvitation(invitation);
+            string subject = "Convite para o Aplicativo e Grupo";
+            string body = $"Você foi convidado para se juntar ao grupo com ID: {groupId}. Por favor, registre-se no nosso aplicativo.";
+            Email.Enviar(subject, body, email, _emailConfig);
+        }
+
+        public void AcceptInvitation(int invitationId)
+        {
+            var invitation = _groupRepository.GetInvitationById(invitationId);
+            if (invitation == null || invitation.Status != "Pendente")
+            {
+                throw new Exception("Convite inválido");
+            }
+
+            var user = _userRepository.GetUserByEmail(invitation.Email);
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado");
+            }
+
+            var groupUser = new GroupUser
+            {
+                GroupID = invitation.GroupId,
+                UserID = user.UserId
+            };
+
+            _groupRepository.AddParticipant(groupUser);
+
+            invitation.Status = "Aceito";
+            invitation.ResponseDate = DateTime.UtcNow;
+            _groupRepository.UpdateInvitation(invitation);
         }
     }
 }

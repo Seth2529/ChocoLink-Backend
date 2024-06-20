@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChocoLink.Domain\ChocoLink.Domain.csproj" />
+    <ProjectReference Include="..\ChocoLink.Infra\ChocoLink.Infra.csproj" />
   </ItemGroup>
 
 </Project>

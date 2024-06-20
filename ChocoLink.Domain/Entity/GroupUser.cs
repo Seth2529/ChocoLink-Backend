@@ -9,6 +9,7 @@ namespace ChocoLink.Domain.Entity
     public class GroupUser
     {
         public int GroupUserID { get; set; }
+        public int PerfilID { get; set; }
         public int GroupID { get; set; }
         public int UserID { get; set; }
 

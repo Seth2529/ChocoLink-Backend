@@ -77,5 +77,21 @@ namespace ChocoLink.Data.Repository
         {
             return _context.GroupUsers.Count(gu => gu.GroupID == groupId);
         }
+        public void AddInvitation(Invite invite)
+        {
+            _context.Invites.Add(invite);
+            _context.SaveChanges();
+        }
+
+        public void UpdateInvitation(Invite invite)
+        {
+            var existingInvite = _context.Invites.FirstOrDefault(i => i.InviteId == invite.InviteId);
+            if (existingInvite != null)
+            {
+                existingInvite.Status = invite.Status;
+                existingInvite.ResponseDate = invite.ResponseDate;
+                _context.SaveChanges();
+            }
+        }
     }
 }

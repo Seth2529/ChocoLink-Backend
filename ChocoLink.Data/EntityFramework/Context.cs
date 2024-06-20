@@ -14,6 +14,7 @@ namespace ChocoLink.Data.EntityFramework
         public DbSet<User> Users { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }
+        public DbSet<Invite> Invites { get; set; }
 
         public Context() : base()
         {
@@ -42,6 +43,7 @@ namespace ChocoLink.Data.EntityFramework
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new GroupConfiguration());
             modelBuilder.ApplyConfiguration(new GroupUserConfiguration());
+            modelBuilder.ApplyConfiguration(new InviteConfiguration());
         }
     }
 }
