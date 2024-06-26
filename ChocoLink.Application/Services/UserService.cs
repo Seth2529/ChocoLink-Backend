@@ -8,21 +8,17 @@ using ChocoLink.Domain.Interfaces;
 using ChocoLink.Domain.IRepository;
 using ChocoLink.Domain.IService;
 using ChocoLink.Infra.EmailService;
+using Microsoft.Extensions.Options;
 
 namespace ChocoLink.Application.Services
 {
     public class UserService : IUserService
     {
-
         private readonly IUserRepository _userRepository;
-        private readonly IGroupRepository _groupRepository;
-        private readonly EmailConfig _emailConfig;
 
-        public UserService(IUserRepository userRepository, IGroupRepository groupRepository, EmailConfig emailConfig)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _groupRepository = groupRepository;
-            _emailConfig = emailConfig;
         }
         public Task<User> Authenticate(string login, string password)
         {
@@ -52,7 +48,7 @@ namespace ChocoLink.Application.Services
         //}
         public void UpdateUserPassword(User user, string newpassword)
         {
-            _userRepository.UpdateUserPassword(user,newpassword);
+            _userRepository.UpdateUserPassword(user, newpassword);
         }
 
         public bool UserExist(string email)
@@ -66,78 +62,5 @@ namespace ChocoLink.Application.Services
             return _userRepository.GetUserByEmail(email);
         }
 
-        public void InviteUserToGroup(int groupId, int userId)
-        {
-            var user = _userRepository.GetUserById(userId);
-            if (user == null)
-            {
-                throw new Exception("Usuário não existe");
-            }
-
-            var invitation = new Invite
-            {
-                GroupId = groupId,
-                UserId = userId,
-                Status = "Pendente",
-                InvitationDate = DateTime.UtcNow
-            };
-
-            _groupRepository.AddInvitation(invitation);
-        }
-        public void InviteOrRegisterUser(int groupId, string email)
-        {
-            var user = _userRepository.GetUserByEmail(email);
-            if (user == null)
-            {
-                SendEmailInvite(email, groupId);
-            }
-            else
-            {
-                InviteUserToGroup(groupId, user.UserId);
-            }
-        }
-
-        private void SendEmailInvite(string email, int groupId)
-        {
-            var invitation = new Invite
-            {
-                GroupId = groupId,
-                Email = email,
-                Status = "Pendente",
-                InvitationDate = DateTime.UtcNow
-            };
-
-            _groupRepository.AddInvitation(invitation);
-            string subject = "Convite para o Aplicativo e Grupo";
-            string body = $"Você foi convidado para se juntar a um grupo. Por favor, registre-se no nosso aplicativo.";
-            Email.Enviar(subject, body, email, _emailConfig);
-        }
-
-        public void AcceptInvitation(int invitationId)
-        {
-            var invitation = _groupRepository.GetInvitationById(invitationId);
-            if (invitation == null || invitation.Status != "Pendente")
-            {
-                throw new Exception("Convite inválido");
-            }
-
-            var user = _userRepository.GetUserByEmail(invitation.Email);
-            if (user == null)
-            {
-                throw new Exception("Usuário não encontrado");
-            }
-
-            var groupUser = new GroupUser
-            {
-                GroupID = invitation.GroupId,
-                UserID = user.UserId
-            };
-
-            _groupRepository.AddParticipant(groupUser);
-
-            invitation.Status = "Aceito";
-            invitation.ResponseDate = DateTime.UtcNow;
-            _groupRepository.UpdateInvitation(invitation);
-        }
     }
 }

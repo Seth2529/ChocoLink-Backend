@@ -16,7 +16,5 @@ namespace ChocoLink.Domain.IService
         //void UpdateUser(User user);
         void UpdateUserPassword(User user, string newPassword);
         public bool UserExist(string email);
-        void InviteUserToGroup(int groupId, int userId);
-        void AcceptInvitation(int invitationId);
     }
 }

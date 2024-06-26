@@ -42,10 +42,7 @@ namespace ChocoLink.Application.Services
         {
             return _groupRepository.GetGroupById(groupID);
         }
-        public Invite GetInvitationById(int invitationId)
-        {
-            return _groupRepository.GetInvitationById(invitationId);
-        }
+
         public bool GroupExist(string groupName)
         {
             var group = _groupRepository.GetGroupName(groupName);

@@ -1,7 +1,7 @@
 ﻿using ChocoLink.API.ViewModels;
+using ChocoLink.Application.Services;
 using ChocoLink.Domain.IService;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace ChocoLink.API.Controllers
 {
@@ -9,13 +9,11 @@ namespace ChocoLink.API.Controllers
     [Route("[controller]")]
     public class InviteController : ControllerBase
     {
-        private readonly IUserService _userService;
-        private readonly IGroupService _groupService;
+        private readonly IInviteService _inviteService;
 
-        public InviteController(IUserService userService, IGroupService groupService)
+        public InviteController(IInviteService inviteService)
         {
-            _userService = userService;
-            _groupService = groupService;   
+            _inviteService = inviteService;
         }
 
         [HttpPost("InviteUser")]
@@ -25,14 +23,14 @@ namespace ChocoLink.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _userService.InviteUserToGroup(model.GroupId, model.UserId);
-                    return Ok($"Convite enviado para o usuário com ID {model.UserId} com sucesso.");
+                    _inviteService.InviteUserToGroup(model.GroupId, model.Email);
+                    return Ok("Convite enviado para o usuário com sucesso.");
                 }
                 return BadRequest("Dados inválidos.");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
+                return BadRequest(ex.Message);
             }
         }
 
@@ -41,20 +39,21 @@ namespace ChocoLink.API.Controllers
         {
             try
             {
-                _userService.AcceptInvitation(invitationId);
+                _inviteService.AcceptInvitation(invitationId);
                 return Ok("Convite aceito com sucesso.");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
+                return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("GetInvitation/{invitationId}")]
         public IActionResult GetInvitationById(int invitationId)
         {
             try
             {
-                var invitation = _groupService.GetInvitationById(invitationId);
+                var invitation = _inviteService.GetInvitationById(invitationId);
                 if (invitation == null)
                 {
                     return NotFound("Convite não encontrado.");
@@ -63,7 +62,7 @@ namespace ChocoLink.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
+                return BadRequest(ex.Message);
             }
         }
     }

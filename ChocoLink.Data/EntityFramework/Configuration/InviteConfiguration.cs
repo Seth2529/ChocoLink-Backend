@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using ChocoLink.Domain.Entity;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ChocoLink.Domain.Entity;
 
 namespace ChocoLink.Data.EntityFramework.Configuration
 {
@@ -19,11 +13,6 @@ namespace ChocoLink.Data.EntityFramework.Configuration
 
             builder.Property(i => i.InviteId)
                 .HasColumnName("InviteId")
-                .HasColumnType("int")
-                .IsRequired();
-
-            builder.Property(i => i.GroupId)
-                .HasColumnName("GroupId")
                 .HasColumnType("int")
                 .IsRequired();
 
@@ -48,12 +37,13 @@ namespace ChocoLink.Data.EntityFramework.Configuration
                 .IsRequired(false);
 
             builder.HasOne(i => i.Group)
-                .WithMany(g => g.Invites)
+                .WithMany(i => i.Invites)
                 .HasForeignKey(i => i.GroupId);
 
             builder.HasOne(i => i.User)
-                .WithMany(u => u.Invites)
-                .HasForeignKey(i => i.UserId);
+                .WithMany(i => i.Invites)
+                .HasForeignKey(i => i.UserID);
         }
     }
 }
+
