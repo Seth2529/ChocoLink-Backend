@@ -15,6 +15,10 @@ namespace ChocoLink.Data.Repository
         Context Context { get; set; }
         public UserRepository(Context context) { Context = context; }
 
+        public bool TestDatabaseConnection()
+        {
+            return Context.CanConnect();
+        }
         public void AddUser(User user)
         {
             Context.Users.Add(user);

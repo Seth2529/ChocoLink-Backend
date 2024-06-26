@@ -41,7 +41,10 @@ namespace ChocoLink.Application.Services
             user.UserId = id;
             _userRepository.AddUser(user);
         }
-
+        public bool TestDatabaseConnection()
+        {
+            return _userRepository.TestDatabaseConnection();
+        }
         //public void UpdateUser(User user)
         //{
         //    _userRepository.UpdateUser(user);

@@ -17,6 +17,34 @@ namespace ChocoLink.API.Controllers
         {
             _userService = userService;
         }
+
+        [HttpGet("TestDbConnection")]
+        public IActionResult TestDbConnection()
+        {
+            try
+            {
+                using (var context = new Context())
+                {
+                    if (context.CanConnect())
+                    {
+                        return Ok("Conexão com o banco de dados realizada com sucesso.");
+                    }
+                    else
+                    {
+                        return StatusCode(500, "Falha ao conectar com o banco de dados.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log detailed error information
+                Console.WriteLine($"Erro ao testar conexão com o banco de dados: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                return StatusCode(500, $"Erro ao testar conexão com o banco de dados: {ex.Message}");
+            }
+        }
+
+
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser(NewUserViewModel user)
         {
@@ -50,5 +78,25 @@ namespace ChocoLink.API.Controllers
             }
         }
 
+        [HttpGet("GetUserById")]
+        public IActionResult GetUserById([FromQuery] int userid)
+        {
+            try
+            {
+                var user = _userService.GetUserById(userid);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+                else
+                {
+                    return NotFound("Usuário não encontrado.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
+            }
+        }
     }
 }

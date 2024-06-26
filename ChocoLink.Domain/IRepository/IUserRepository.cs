@@ -15,5 +15,6 @@ namespace ChocoLink.Domain.Interfaces
         //void UpdateUser(User user);
         void UpdateUserPassword(User user, string newPassword);
         public int NextAvailableID();
+        public bool TestDatabaseConnection();
     }
 }

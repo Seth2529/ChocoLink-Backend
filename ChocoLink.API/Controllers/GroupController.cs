@@ -55,7 +55,25 @@ namespace ChocoLink.API.Controllers
                     };
                     _groupService.AddParticipant(newGroupUser);
 
-                    return Ok("Grupo e administrador adicionados com sucesso.");
+                    return Ok("Grupo adicionado com sucesso.");
+                }
+                return BadRequest("Dados inválidos.");
+            }
+            catch (Exception erro)
+            {
+                return BadRequest(erro.Message);
+            }
+        }
+
+        [HttpPost("DeleteGroup")]
+        public async Task<IActionResult> DeleteGroup([FromForm] int groupID)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _groupService.DeleteGroup(groupID);
+                    return Ok("Grupo excluido com sucesso.");
                 }
                 return BadRequest("Dados inválidos.");
             }
@@ -79,46 +97,46 @@ namespace ChocoLink.API.Controllers
             }
         }
 
-        [HttpPost("AddParticipant")]
-        public IActionResult AddParticipant([FromForm] NewGroupUserViewModel newGroupUser)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var (currentParticipants, maxParticipants) = _groupService.GetParticipantCount(newGroupUser.GroupID);
+        //[HttpPost("AddParticipant")]
+        //public IActionResult AddParticipant([FromForm] NewGroupUserViewModel newGroupUser)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            var (currentParticipants, maxParticipants) = _groupService.GetParticipantCount(newGroupUser.GroupID);
 
-                    if (currentParticipants >= maxParticipants)
-                    {
-                        return BadRequest($"O grupo atingiu o número máximo de participantes ({maxParticipants}).");
-                    }
-                    var add = new GroupUser
-                    {
-                        GroupID = newGroupUser.GroupID,
-                        UserID = newGroupUser.UserID
-                    };
+        //            if (currentParticipants >= maxParticipants)
+        //            {
+        //                return BadRequest($"O grupo atingiu o número máximo de participantes ({maxParticipants}).");
+        //            }
+        //            var add = new GroupUser
+        //            {
+        //                GroupID = newGroupUser.GroupID,
+        //                UserID = newGroupUser.UserID
+        //            };
 
-                    _groupService.AddParticipant(add);
-                    return Ok("Participante adicionado com sucesso.");
-                }
+        //            _groupService.AddParticipant(add);
+        //            return Ok("Participante adicionado com sucesso.");
+        //        }
 
-                var errors = ModelState.Values.SelectMany(v => v.Errors)
-                                              .Select(e => e.ErrorMessage)
-                                              .ToList();
-                return BadRequest(errors);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+        //        var errors = ModelState.Values.SelectMany(v => v.Errors)
+        //                                      .Select(e => e.ErrorMessage)
+        //                                      .ToList();
+        //        return BadRequest(errors);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error: {ex.Message}");
 
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Exceção Interna: {ex.InnerException.Message}");
-                }
+        //        if (ex.InnerException != null)
+        //        {
+        //            Console.WriteLine($"Exceção Interna: {ex.InnerException.Message}");
+        //        }
 
-                return BadRequest("Ocorreu um erro ao adicionar participante.");
-            }
-        }
+        //        return BadRequest("Ocorreu um erro ao adicionar participante.");
+        //    }
+        //}
 
         [HttpGet("GetParticipantCount/{groupId}")]
         public IActionResult GetParticipantCount(int groupId)

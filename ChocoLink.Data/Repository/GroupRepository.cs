@@ -28,6 +28,16 @@ namespace ChocoLink.Data.Repository
             Context.SaveChanges();
         }
 
+        public void DeleteGroup(int groupId)
+        {
+            var grupo = Context.Groups.FirstOrDefault(p => p.GroupID.Equals(groupId));
+            if (grupo != null)
+            {
+                Context.Groups.Remove(grupo);
+                Context.SaveChanges();
+            };
+        }
+
         public Group GetGroupById(int groupID)
         {
             return Context.Groups.First(g => g.GroupID == groupID);

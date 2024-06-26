@@ -19,6 +19,20 @@ namespace ChocoLink.Data.EntityFramework
         public Context() : base()
         {
         }
+        public bool CanConnect()
+        {
+            try
+            {
+                return Database.CanConnect();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details
+                Console.WriteLine($"Erro ao tentar conectar ao banco de dados: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                return false;
+            }
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

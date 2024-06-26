@@ -140,5 +140,27 @@ namespace ChocoLink.API.Controllers
                 return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
             }
         }
+
+        [HttpGet("GetUserByEmail")]
+        public IActionResult GetUserByEmail([FromQuery] string email)
+        {
+            try
+            {
+                var user = _userService.GetUserByEmail(email);
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+                else
+                {
+                    return NotFound("Usuário não encontrado.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = $"Erro no servidor: {ex.Message}" });
+            }
+        }
+
     }
 }

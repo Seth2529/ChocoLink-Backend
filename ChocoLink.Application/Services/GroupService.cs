@@ -38,6 +38,11 @@ namespace ChocoLink.Application.Services
             _groupRepository.AddGroup(group);
         }
 
+        public void DeleteGroup(int groupId)
+        {
+            _groupRepository.DeleteGroup(groupId);
+        }
+
         public Group GetGroupById(int groupID)
         {
             return _groupRepository.GetGroupById(groupID);

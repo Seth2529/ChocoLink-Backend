@@ -16,5 +16,7 @@ namespace ChocoLink.Domain.IService
         //void UpdateUser(User user);
         void UpdateUserPassword(User user, string newPassword);
         public bool UserExist(string email);
+        public bool TestDatabaseConnection();
+
     }
 }

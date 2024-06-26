@@ -14,6 +14,7 @@ namespace ChocoLink.Domain.IRepository
         public int NextAvailableID();
         public int NextAvailableGroupUserID();
         public void AddGroup(Group group);
+        public void DeleteGroup(int groupId);
         public Group GetGroupName(string Groupname);
         void UpdateGroup(Group group);
         public void AddParticipant(GroupUser groupUser);
