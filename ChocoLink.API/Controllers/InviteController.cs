@@ -48,12 +48,26 @@ namespace ChocoLink.API.Controllers
             }
         }
 
-        [HttpGet("GetInvitation/{invitationId}")]
-        public IActionResult GetInvitationById(int invitationId)
+        [HttpDelete("DeleteInvitation")]
+        public IActionResult DeleteInvitation(int inviteId)
         {
             try
             {
-                var invitation = _inviteService.GetInvitationById(invitationId);
+                _inviteService.DeleteInvitation(inviteId);
+                return Ok("Convite excluído com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetInvitation/{userId}")]
+        public IActionResult GetInvitationByUserId(int userId)
+        {
+            try
+            {
+                var invitation = _inviteService.GetInvitationByUserId(userId);
                 if (invitation == null)
                 {
                     return NotFound("Convite não encontrado.");
@@ -65,5 +79,6 @@ namespace ChocoLink.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
     }
 }

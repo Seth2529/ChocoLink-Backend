@@ -11,8 +11,9 @@ namespace ChocoLink.Domain.IService
     {
         public Group GetGroupById(int GroupID);
         public void AddGroup(Group group);
-        public void DeleteGroup(int groupId);
+        Task<bool> DeleteGroup(int groupId);
         public IEnumerable<Group> GetAllGroups();
+        public IEnumerable<Group> GetGroupsByUserId(int userId);
         public Group GetGroupName(string groupName);
         public bool GroupExist(string groupName);
         void UpdateGroup(Group group);

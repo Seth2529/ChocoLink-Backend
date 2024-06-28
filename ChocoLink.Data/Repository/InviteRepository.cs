@@ -17,10 +17,19 @@ public class InviteRepository : IInviteRepository
         Context.Invites.Add(invite);
         Context.SaveChanges();
     }
-
-    public Invite GetInvitationById(int invitationId)
+    public void DeleteInvitation(int inviteId)
     {
-        return Context.Invites.FirstOrDefault(i => i.InviteId == invitationId);
+        var invite = Context.Invites.FirstOrDefault(i => i.InviteId == inviteId);
+        if (invite != null)
+        {
+            Context.Invites.Remove(invite);
+            Context.SaveChanges();
+        }
+    }
+
+    public List<Invite> GetInvitationByUserId(int userId)
+    {
+        return Context.Invites.Where(invite => invite.UserID == userId).ToList();
     }
 
     public void UpdateInvitation(Invite invite)
@@ -45,6 +54,10 @@ public class InviteRepository : IInviteRepository
         }
 
         return nextId;
+    }
+    public Invite GetInvitationById(int invitationId)
+    {
+        return Context.Invites.FirstOrDefault(i => i.InviteId == invitationId);
     }
     public Invite GetPendingInvite(int groupId, int userId)
     {

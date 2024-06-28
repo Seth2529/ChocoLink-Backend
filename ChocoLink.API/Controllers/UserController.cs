@@ -46,13 +46,13 @@ namespace ChocoLink.API.Controllers
 
 
         [HttpPost("AddUser")]
-        public async Task<IActionResult> AddUser(NewUserViewModel user)
+        public async Task<IActionResult> AddUser([FromForm] NewUserViewModel user)
         {
-
             try
             {
                 if (ModelState.IsValid)
                 {
+                    Console.WriteLine("ModelState é válido.");
                     byte[] photoBytes;
                     using (var memoryStream = new MemoryStream())
                     {
@@ -61,15 +61,15 @@ namespace ChocoLink.API.Controllers
                     }
 
                     User add = new()
-                        {
-                            Photo = photoBytes,
-                            Username = user.Username,
-                            Password = user.Password,
-                            Email = user.Email
-                        };
-                        _userService.AddUser(add);
-                        return Ok("Adicionado com Sucesso");
-                    }
+                    {
+                        Photo = photoBytes,
+                        Username = user.Username,
+                        Password = user.Password,
+                        Email = user.Email
+                    };
+                    _userService.AddUser(add);
+                    return Ok("Adicionado com Sucesso");
+                }
                 return BadRequest("Dados inválidos.");
             }
             catch (Exception erro)
@@ -77,6 +77,7 @@ namespace ChocoLink.API.Controllers
                 return BadRequest(erro.Message);
             }
         }
+
 
         [HttpGet("GetUserById")]
         public IActionResult GetUserById([FromQuery] int userid)

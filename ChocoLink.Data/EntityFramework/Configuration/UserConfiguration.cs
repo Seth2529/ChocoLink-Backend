@@ -38,7 +38,8 @@ namespace ChocoLink.Data.EntityFramework.Configuration
             builder
                 .Property(u => u.Photo)
                 .HasColumnName("Photo")
-                .HasColumnType("varbinary(MAX)");
+                .HasColumnType("varbinary(MAX)")
+                .IsRequired(false);
 
             builder.HasMany(u => u.GroupUsers)
                .WithOne(gu => gu.User)

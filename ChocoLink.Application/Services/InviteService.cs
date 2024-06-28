@@ -3,6 +3,7 @@ using ChocoLink.Domain.Interfaces;
 using ChocoLink.Domain.IRepository;
 using ChocoLink.Domain.IService;
 using ChocoLink.Infra.EmailService;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
 
@@ -25,7 +26,16 @@ public class InviteService : IInviteService
     {
         return _userRepository.GetUserByEmail(email);
     }
+    public void DeleteInvitation(int inviteId)
+    {
+        var invitation = _inviteRepository.GetInvitationById(inviteId);
+        if (invitation == null)
+        {
+            throw new Exception("Convite não encontrado");
+        }
 
+        _inviteRepository.DeleteInvitation(inviteId);
+    }
     public void InviteUserToGroup(int groupId, string email)
     {
         var user = _userRepository.GetUserByEmail(email);
@@ -114,9 +124,10 @@ public class InviteService : IInviteService
         _inviteRepository.UpdateInvitation(invitation);
     }
 
-    public Invite GetInvitationById(int invitationId)
+
+    public List<Invite> GetInvitationByUserId(int userId)
     {
-        return _inviteRepository.GetInvitationById(invitationId);
+        return _inviteRepository.GetInvitationByUserId(userId);
     }
     public (int currentParticipants, int maxParticipants) GetParticipantCount(int groupId)
     {

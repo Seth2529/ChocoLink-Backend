@@ -12,7 +12,8 @@ namespace ChocoLink.Domain.IService
         public User GetUserByEmail(string email);
         void InviteUserToGroup(int groupId, string email);
         void AcceptInvitation(int invitationId);
-        public Invite GetInvitationById(int invitationId);
+        public void DeleteInvitation(int inviteId);
+        public List<Invite> GetInvitationByUserId(int userId);
         public void InviteOrRegisterUser(int groupId, string email);
         public (int currentParticipants, int maxParticipants) GetParticipantCount(int groupId);
 

@@ -25,6 +25,10 @@ namespace ChocoLink.Application.Services
         {
             return _groupRepository.GetAllGroups();
         }
+        public IEnumerable<Group> GetGroupsByUserId(int userId)
+        {
+            return _groupRepository.GetGroupsByUserId(userId);
+        }
 
         public void AddGroup(Group group)
         {
@@ -38,9 +42,19 @@ namespace ChocoLink.Application.Services
             _groupRepository.AddGroup(group);
         }
 
-        public void DeleteGroup(int groupId)
+        public async Task<bool> DeleteGroup(int groupId)
         {
-            _groupRepository.DeleteGroup(groupId);
+            try
+            {
+                var isDeleted = await _groupRepository.DeleteGroup(groupId);
+                return isDeleted;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao deletar o grupo: {ex.Message}");
+            }
+
+            return false; 
         }
 
         public Group GetGroupById(int groupID)
@@ -56,7 +70,7 @@ namespace ChocoLink.Application.Services
 
         public void UpdateGroup(Group group)
         {
-            throw new NotImplementedException();
+            _groupRepository.UpdateGroup(group);
         }
 
         public void AddParticipant(GroupUser groupUser)

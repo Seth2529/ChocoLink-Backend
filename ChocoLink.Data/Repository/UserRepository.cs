@@ -62,6 +62,7 @@ namespace ChocoLink.Data.Repository
             if (existingUser != null)
             {
                 existingUser.Password = newPassword;
+                Context.SaveChanges();
             }
         }
 

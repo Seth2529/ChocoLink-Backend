@@ -4,7 +4,6 @@ namespace ChocoLink.API.ViewModels
 {
     public class NewGroupViewModel
     {
-        [Required]
         public IFormFile Photo { get; set; }
         [Required]
         public string GroupName { get; set; }

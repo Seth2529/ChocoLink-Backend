@@ -1,4 +1,5 @@
 ﻿using ChocoLink.API.ViewModels;
+using ChocoLink.Data.EntityFramework;
 using ChocoLink.Domain.Entity;
 using ChocoLink.Domain.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,33 @@ namespace ChocoLink.API.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _groupService;
+        private readonly Context _context;
 
-        public GroupController(IGroupService groupService)
+
+        public GroupController(IGroupService groupService, Context context)
         {
             _groupService = groupService;
+            _context = context;
+        }
+
+        [HttpDelete("DeleteGroup")]
+        public async Task<IActionResult> DeleteGroup(int groupId)
+        {
+            try
+            {
+                var isDeleted = await _groupService.DeleteGroup(groupId);
+
+                if (!isDeleted)
+                {
+                    return NotFound();
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao deletar o grupo: {ex.Message}");
+            }
         }
 
         [HttpPost("AddGroup")]
@@ -65,17 +89,13 @@ namespace ChocoLink.API.Controllers
             }
         }
 
-        [HttpPost("DeleteGroup")]
-        public async Task<IActionResult> DeleteGroup([FromForm] int groupID)
+        [HttpGet("GetGroupsByUser/{userId}")]
+        public IActionResult GetGroupsByUserId(int userId)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    _groupService.DeleteGroup(groupID);
-                    return Ok("Grupo excluido com sucesso.");
-                }
-                return BadRequest("Dados inválidos.");
+                var groups = _groupService.GetGroupsByUserId(userId);
+                return Ok(groups);
             }
             catch (Exception erro)
             {

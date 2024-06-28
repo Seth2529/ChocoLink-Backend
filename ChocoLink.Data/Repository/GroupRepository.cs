@@ -21,6 +21,14 @@ namespace ChocoLink.Data.Repository
         {
             return Context.Groups.ToList();
         }
+        public IEnumerable<Group> GetGroupsByUserId(int userId)
+        {
+            return Context.GroupUsers
+                          .Where(gu => gu.UserID == userId)
+                          .Include(gu => gu.Group)
+                          .Select(gu => gu.Group)
+                          .ToList();
+        }
 
         public void AddGroup(Group group)
         {
@@ -28,14 +36,33 @@ namespace ChocoLink.Data.Repository
             Context.SaveChanges();
         }
 
-        public void DeleteGroup(int groupId)
+        public async Task<bool> DeleteGroup(int groupId)
         {
-            var grupo = Context.Groups.FirstOrDefault(p => p.GroupID.Equals(groupId));
-            if (grupo != null)
+            try
             {
-                Context.Groups.Remove(grupo);
-                Context.SaveChanges();
-            };
+                var group = await Context.Groups.FindAsync(groupId);
+
+                if (group == null)
+                {
+                    return false;
+                }
+
+                var groupUsers = Context.GroupUsers.Where(gu => gu.GroupID == groupId);
+                Context.GroupUsers.RemoveRange(groupUsers);
+
+                var invites = Context.Invites.Where(invite => invite.GroupId == groupId);
+                Context.Invites.RemoveRange(invites);
+
+                Context.Groups.Remove(group);
+
+                await Context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao deletar o grupo: {ex.Message}");
+            }
         }
 
         public Group GetGroupById(int groupID)
@@ -74,7 +101,8 @@ namespace ChocoLink.Data.Repository
 
         public void UpdateGroup(Group group)
         {
-            throw new NotImplementedException();
+            Context.Groups.Update(group);
+            Context.SaveChanges();
         }
 
         public void AddParticipant(GroupUser groupUser)
